@@ -499,14 +499,6 @@ export function repairToolUseResultPairing(
     }
 
     for (const call of validToolCalls) {
-      // Skip tool calls with empty or missing IDs — these are phantom entries
-      // produced when a provider returns stopReason "toolUse" without a valid
-      // tool call block (e.g. during cross-provider failover). Synthesizing a
-      // toolResult for an empty toolCallId corrupts the session permanently
-      // because strict providers reject the unmatched pair. See #21985.
-      if (!call.id || !call.id.trim()) {
-        continue;
-      }
       const existing = spanResultsById.get(call.id);
       if (existing) {
         pushToolResult(existing);
