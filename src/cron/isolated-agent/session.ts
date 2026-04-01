@@ -77,12 +77,18 @@ export function resolveCronSession(params: {
     // replies instead of channel top-level messages.
     // deliveryContext must also be cleared because normalizeSessionEntryDelivery
     // repopulates lastThreadId from deliveryContext.threadId on store writes.
+    //
+    // Also clear stale model/provider overrides so the new session starts with
+    // a clean slate and picks up the cron payload model or agent defaults
+    // instead of inheriting a user-set model override from a prior session.
     ...(isNewSession && {
       lastChannel: undefined,
       lastTo: undefined,
       lastAccountId: undefined,
       lastThreadId: undefined,
       deliveryContext: undefined,
+      modelOverride: undefined,
+      providerOverride: undefined,
     }),
   };
   return { storePath, store, sessionEntry, systemSent, isNewSession };
